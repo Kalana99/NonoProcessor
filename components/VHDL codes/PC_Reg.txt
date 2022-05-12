@@ -1,0 +1,50 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/04/2021 09:31:06 PM
+-- Design Name: 
+-- Module Name: PC_Reg - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity PC_Reg is
+    Port (    D     : in STD_LOGIC_VECTOR (2 downto 0);
+              R     : in STD_LOGIC;                         --reset push button
+              Clk   : in STD_LOGIC;
+              Q     : out STD_LOGIC_VECTOR (2 downto 0));   --memory select
+end PC_Reg;
+
+architecture Behavioral of PC_Reg is
+
+begin
+
+    process (Clk) begin
+        if (rising_edge(Clk)) then
+            if R = '1' then
+                Q <= "000";
+            else 
+                if D = "UUU" then
+                    Q <= "000";
+                else
+                    Q <= D;
+                end if;
+            end if;
+        end if;
+    end process;
+    
+end Behavioral;

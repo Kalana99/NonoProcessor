@@ -1,0 +1,102 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/04/2021 10:36:58 PM
+-- Design Name: 
+-- Module Name: ProgramCounter - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity ProgramCounter is
+    Port ( Clk      : in STD_LOGIC;
+           Reset    : in STD_LOGIC;
+           JumpFlag : in STD_LOGIC;
+           JumpAdd  : in STD_LOGIC_VECTOR (2 downto 0);
+           MemSel   : out STD_LOGIC_VECTOR (2 downto 0));
+end ProgramCounter;
+
+architecture Behavioral of ProgramCounter is
+
+component PC_Reg is
+    Port (    D     : in STD_LOGIC_VECTOR (2 downto 0);
+              R     : in STD_LOGIC; 
+              Clk   : in STD_LOGIC;
+              Q     : out STD_LOGIC_VECTOR (2 downto 0));
+end component;
+
+component RCA_3 is
+    Port ( A0       : in STD_LOGIC;
+           A1       : in STD_LOGIC;
+           A2       : in STD_LOGIC;
+           
+           B0       : in STD_LOGIC;
+           B1       : in STD_LOGIC;
+           B2       : in STD_LOGIC;
+           
+           C_in     : in STD_LOGIC;
+       
+           S0       : out STD_LOGIC;
+           S1       : out STD_LOGIC;
+           S2       : out STD_LOGIC;
+         
+           C_out    : out STD_LOGIC);
+end component;
+
+component Mux2_3bit is
+    Port ( AdderOutput  : in STD_LOGIC_VECTOR (2 downto 0);
+           AddressJump  : in STD_LOGIC_VECTOR (2 downto 0);
+           jumpFlag     : in STD_LOGIC;
+           mux_out      : out STD_LOGIC_VECTOR (2 downto 0));
+end component;
+
+signal Mux_in           : std_logic_vector(2 downto 0);
+signal nextIns          : std_logic_vector(2 downto 0);
+signal currIns          : std_logic_vector(2 downto 0);
+
+begin
+
+    PC_Reg_0 : PC_Reg
+        port map(
+            D   => nextIns,
+            R   => Reset,
+            Clk => Clk,
+            Q   => currIns);
+            
+    RCA_3_0 : RCA_3
+        port map(
+            A0      => currIns(0),
+            A1      => currIns(1),
+            A2      => currIns(2),
+            B0      => '0',
+            B1      => '0',
+            B2      => '0',
+            C_in    => '1',
+            S0      => Mux_in(0),
+            S1      => Mux_in(1),
+            S2      => Mux_in(2)); -- C_out is not included
+            
+    Mux2_3bit_0 : Mux2_3bit
+        port map(
+            AdderOutput => Mux_in,
+            AddressJump => JumpAdd,
+            jumpFlag    => JumpFlag,
+            mux_out     => nextIns);
+            
+    MemSel <= currIns;
+
+end Behavioral;

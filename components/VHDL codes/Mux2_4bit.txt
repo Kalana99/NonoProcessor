@@ -1,0 +1,47 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/04/2021 09:14:06 PM
+-- Design Name: 
+-- Module Name: Mux2_4bit - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Mux2_4bit is
+    Port ( immVal           : in STD_LOGIC_VECTOR (3 downto 0);
+           addSub_result    : in STD_LOGIC_VECTOR (3 downto 0);
+           loadSel          : in STD_LOGIC; --loadSel <= Mov
+           mux_out          : out STD_LOGIC_VECTOR (3 downto 0));
+end Mux2_4bit;
+
+architecture Behavioral of Mux2_4bit is
+
+begin
+
+    process(immVal, addSub_result, loadSel)
+        begin
+            case loadSel is
+            
+                when '0'        => mux_out <= addSub_result;
+                when '1'        => mux_out <= immVal;
+                when others     => mux_out <= "0000";
+            
+            end case;
+        end process;
+
+end Behavioral;

@@ -1,0 +1,60 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/06/2021 12:18:06 PM
+-- Design Name: 
+-- Module Name: Sim_Mux2_3bit - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_Mux2_3bit is
+--  Port ( );
+end Sim_Mux2_3bit;
+
+architecture Behavioral of Sim_Mux2_3bit is
+
+component Mux2_3bit is
+    Port ( AdderOutput  : in STD_LOGIC_VECTOR (2 downto 0);
+           AddressJump  : in STD_LOGIC_VECTOR (2 downto 0);
+           jumpFlag     : in STD_LOGIC;
+           mux_out      : out STD_LOGIC_VECTOR (2 downto 0));
+end component;
+
+signal AdderOutput, AddressJump, mux_out    : std_logic_vector(2 downto 0);
+signal jumpFlag                             : std_logic;
+
+begin
+
+UUT : Mux2_3bit port map(
+        AdderOutput => AdderOutput,
+        AddressJump => AddressJump,
+        jumpFlag    => jumpFlag,
+        mux_out     => mux_out);
+        
+process
+    begin
+        AdderOutput <= "011";
+        AddressJump <= "101";
+        jumpFlag    <= '0';
+        wait for 100ns;
+        
+        jumpFlag    <= '1';
+    wait;
+end process;
+
+end Behavioral;

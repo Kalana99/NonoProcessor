@@ -1,0 +1,49 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/04/2021 09:26:57 PM
+-- Design Name: 
+-- Module Name: Program_ROM - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity Program_ROM is
+    Port ( Mem_Sel      : in STD_LOGIC_VECTOR (2 downto 0);
+           Instruction  : out STD_LOGIC_VECTOR (11 downto 0));
+end Program_ROM;
+
+architecture Behavioral of Program_ROM is
+
+type rom_type is array( 0 to 7 ) of std_logic_vector (11 downto 0);
+    signal instruction_ROM : rom_type := (
+        "101110000011", --10 111 000 0011 -> MOVI R7, 3     ; R7 <- 3                   - 000 - 0
+        "100010000011", --10 001 000 0011 -> MOVI R1, 3     ; R1 <- 3                   - 001 - 1
+        "100100000001", --10 010 000 0001 -> MOVI R2, 1     ; R2 <- 1                   - 010 - 2
+        "010100000000", --01 010 000 0000 -> NEG R2         ; R2 <- -R2                 - 011 - 3
+        "000010100000", --00 001 010 0000 -> ADD R1, R2     ; R1 <- R1 + R2             - 100 - 4
+        "001110010000", --00 111 001 0000 -> ADD R7, R1     ; R7 <- R7 + R1             - 101 - 5
+        "110010000110", --11 001 000 0110 -> JZR R1, 6      ; If R1 = 0 jump to line 6  - 110 - 6
+        "110000000100"  --11 000 000 0100 -> JZR R0, 4      ; If R0 = 0 jump to line 4  - 111 - 7
+        );
+
+begin
+
+Instruction <= instruction_ROM(to_integer(unsigned(Mem_Sel)));
+
+end Behavioral;

@@ -1,0 +1,75 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/05/2021 05:08:34 PM
+-- Design Name: 
+-- Module Name: Sim_NanoProcessor - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_NanoProcessor is
+--  Port ( );
+end Sim_NanoProcessor;
+
+architecture Behavioral of Sim_NanoProcessor is
+
+component NanoProcessor is
+    Port ( Clk          : in STD_LOGIC;
+           Reset        : in STD_LOGIC;
+           Overflow     : out STD_LOGIC;
+           Zero         : out STD_LOGIC;
+           S_out        : out STD_LOGIC_VECTOR (3 downto 0);
+           sevenSegOut  : out STD_LOGIC_VECTOR(6 downto 0));
+end component;
+
+signal Clk, Reset, Overflow, Zero   : std_logic;
+signal S_out                        : std_logic_vector(3 downto 0);
+signal sevenSegOut                  : std_logic_vector(6 downto 0);
+
+constant clock_period               : time := 10ns;
+
+begin
+
+UUT : NanoProcessor port map(
+        Clk         => Clk,
+        Reset       => Reset,
+        Overflow    => Overflow,
+        Zero        => Zero,
+        S_out       => S_out,
+        sevenSegOut => sevenSegOut);
+
+clock_process : process
+    begin
+        Clk <= '1';
+        wait for clock_period / 2;
+        
+        Clk <= '0';
+        wait for clock_period / 2;
+end process;
+
+sim : process
+    begin
+        Reset <= '0';
+        wait for 100ns;
+        Reset <= '1';
+        wait for 100ns;
+        Reset <= '0';
+    wait;
+end process;
+
+end Behavioral;

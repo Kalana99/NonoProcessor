@@ -1,0 +1,77 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/04/2021 08:48:46 PM
+-- Design Name: 
+-- Module Name: Sim_AddSubUnit - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_AddSubUnit is
+--  Port ( );
+end Sim_AddSubUnit;
+
+architecture Behavioral of Sim_AddSubUnit is
+
+component AddSubUnit is
+    Port ( MuxA_out     : in STD_LOGIC_VECTOR (3 downto 0);     --outputs of the mux -> inputs for the add/sub unit
+           MuxB_out     : in STD_LOGIC_VECTOR (3 downto 0);
+           Add_Sub_sel  : in STD_LOGIC;                         --add/sub unit selector line
+           Neg_in       : in STD_LOGIC;                         --to calculate the negation of a given number
+           Add_Sub_out  : out STD_LOGIC_VECTOR (3 downto 0);    --output of the add/sub unit
+           overflow     : out STD_LOGIC;                        --carry out
+           zero         : out STD_LOGIC); 
+end component;
+
+signal MuxA_out, MuxB_out, Add_Sub_out      : std_logic_vector(3 downto 0);
+signal Add_Sub_Sel, Neg_in, overflow, zero  : std_logic;
+
+begin
+
+UUT : AddSubUnit port map(
+        MuxA_out    => MuxA_out,
+        MuxB_out    => MuxB_out,
+        Add_Sub_Sel => Add_Sub_Sel,
+        Neg_in      => Neg_in,
+        Add_Sub_out => Add_Sub_out,
+        overflow    => overflow,
+        zero        => zero);
+        
+process
+    begin
+        MuxA_out    <= "1010";
+        MuxB_out    <= "1100";
+        Add_Sub_sel <= '1';
+        Neg_in      <= '0';
+        wait for 100ns;
+        
+        MuxB_out    <= "0001";
+        wait for 100ns;
+        
+        MuxA_out    <= "0011";
+        MuxB_out    <= "0000";
+        Neg_in      <= '1';
+        wait for 100ns;
+        
+        MuxA_out    <= "1111";
+        MuxB_out    <= "0001";
+        Neg_in      <= '0';
+    wait;
+end process;
+
+end Behavioral;

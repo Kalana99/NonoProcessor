@@ -1,0 +1,99 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity RegisterBank is
+    Port ( RegBank_in : in STD_LOGIC_VECTOR (3 downto 0); --common input line for all the registers
+           RegEN : in STD_LOGIC_VECTOR (2 downto 0); --enables the register which needs to be loaded
+           Clk : in STD_LOGIC;
+           Reg0_out : out STD_LOGIC_VECTOR (3 downto 0); --busses to carry the data inside the registers to the mux
+           Reg1_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg2_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg3_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg4_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg5_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg6_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg7_out : out STD_LOGIC_VECTOR (3 downto 0));
+end RegisterBank;
+
+architecture Behavioral of RegisterBank is
+
+component Reg
+    Port ( D : in STD_LOGIC_VECTOR (3 downto 0);
+           En : in STD_LOGIC;
+           Clk : in STD_LOGIC;
+           Q : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+component Decoder_3_to_8 --works as register enabling unit
+    Port ( I : in STD_LOGIC_VECTOR (2 downto 0);
+           EN : in STD_LOGIC;
+           Y : out STD_LOGIC_VECTOR (7 downto 0));
+end component;
+
+signal internal_RegEN : STD_LOGIC_VECTOR (7 downto 0); --enabler for each register
+
+begin
+
+    Decoder_3_to_8_0 : Decoder_3_to_8
+        port map (
+        I(2 downto 0) => RegEN(2 downto 0),
+        EN => '1',
+        Y(7 downto 0) => internal_RegEN(7 downto 0));
+        
+    Reg_0 : Reg
+        port map(
+        D(3 downto 0) => "0000", -- Reg_0 is readOnly - for execute negate instruction
+        En => internal_RegEN(0),
+        Clk => Clk,
+        Q(3 downto 0) => Reg0_out(3 downto 0));
+        
+    Reg_1 : Reg
+        port map(
+        D(3 downto 0) => RegBank_in(3 downto 0),
+        En => internal_RegEN(1),
+        Clk => Clk,
+        Q(3 downto 0) => Reg1_out(3 downto 0));
+                
+    Reg_2 : Reg
+        port map(
+        D(3 downto 0) => RegBank_in(3 downto 0),
+        En => internal_RegEN(2),
+        Clk => Clk,
+        Q(3 downto 0) => Reg2_out(3 downto 0));
+                        
+    Reg_3 : Reg
+        port map(
+        D(3 downto 0) => RegBank_in(3 downto 0),
+        En => internal_RegEN(3),
+        Clk => Clk,
+        Q(3 downto 0) => Reg3_out(3 downto 0));
+                                
+    Reg_4 : Reg
+        port map(
+        D(3 downto 0) => RegBank_in(3 downto 0),
+        En => internal_RegEN(4),
+        Clk => Clk,
+        Q(3 downto 0) => Reg4_out(3 downto 0));
+                                        
+    Reg_5 : Reg
+        port map(
+        D(3 downto 0) => RegBank_in(3 downto 0),
+        En => internal_RegEN(5),
+        Clk => Clk,
+        Q(3 downto 0) => Reg5_out(3 downto 0));
+                                                
+    Reg_6 : Reg
+        port map(
+        D(3 downto 0) => RegBank_in(3 downto 0),
+        En => internal_RegEN(6),
+        Clk => Clk,
+        Q(3 downto 0) => Reg6_out(3 downto 0));
+                                                        
+    Reg_7 : Reg
+        port map(
+        D(3 downto 0) => RegBank_in(3 downto 0),
+        En => internal_RegEN(7),
+        Clk => Clk,
+        Q(3 downto 0) => Reg7_out(3 downto 0));
+
+end Behavioral;

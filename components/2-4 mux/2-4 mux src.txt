@@ -1,0 +1,26 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Mux_2_way_4_bit is
+    Port ( immediateVal : in STD_LOGIC_VECTOR (3 downto 0); -- immediate value to store
+           addSub_result : in STD_LOGIC_VECTOR (3 downto 0); -- output of the add/sub unit
+           loadSel : in STD_LOGIC; --load selector - '1' if the instruction is MOVI
+           mux_out : out STD_LOGIC_VECTOR (3 downto 0)); -- output of the mux - connects to register bank input
+end Mux_2_way_4_bit;
+
+architecture Behavioral of Mux_2_way_4_bit is
+
+begin
+
+    process(immediateVal, addSub_result, loadSel)
+        begin
+            case loadSel is
+            
+                when '0' => mux_out <= addSub_result;
+                when '1' => mux_out <= immediateVal;
+                when others => mux_out <= "0000";
+            
+            end case;
+        end process;
+
+end Behavioral;

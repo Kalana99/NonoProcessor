@@ -1,0 +1,56 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/05/2021 08:50:58 PM
+-- Design Name: 
+-- Module Name: Sim_Mux2_4bit - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_Mux2_4bit is
+--  Port ( );
+end Sim_Mux2_4bit;
+
+architecture Behavioral of Sim_Mux2_4bit is
+
+component Mux2_4bit is
+    Port ( immVal           : in STD_LOGIC_VECTOR (3 downto 0);
+           addSub_result    : in STD_LOGIC_VECTOR (3 downto 0);
+           loadSel          : in STD_LOGIC; --loadSel <= Mov
+           mux_out          : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+signal immVal, addSub_result, mux_out   : std_logic_vector(3 downto 0);
+signal loadSel                          : std_logic;
+
+begin
+
+UUT : Mux2_4bit port map(
+        immVal          => immVal,
+        addSub_result   => addSub_result,
+        loadSel         => loadSel,
+        mux_out         => mux_out);
+
+process
+    begin
+        immVal <= "0101";
+        loadSel <= '1';
+    wait;
+end process;
+
+end Behavioral;

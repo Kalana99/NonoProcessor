@@ -1,0 +1,82 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/05/2021 05:54:47 PM
+-- Design Name: 
+-- Module Name: Sim_RegisterBank - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_RegisterBank is
+--  Port ( );
+end Sim_RegisterBank;
+
+architecture Behavioral of Sim_RegisterBank is
+
+component RegisterBank is
+    Port ( RegBank_in   : in STD_LOGIC_VECTOR (3 downto 0);
+           RegEN        : in STD_LOGIC_VECTOR (2 downto 0);
+           Clk          : in STD_LOGIC;
+           Reg0_out     : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg1_out     : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg2_out     : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg3_out     : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg4_out     : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg5_out     : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg6_out     : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg7_out     : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+signal RegEN : std_logic_vector(2 downto 0);
+signal RegBank_in, Reg0_out, Reg1_out, Reg2_out, Reg3_out, Reg4_out, Reg5_out, Reg6_out, Reg7_out : std_logic_vector(3 downto 0);
+signal Clk : std_logic;
+
+constant clock_period : time := 10ns;
+
+begin
+
+UUT : RegisterBank port map(
+        RegBank_in => RegBank_in,
+        RegEN => RegEN,
+        Clk => Clk,
+        Reg0_out => Reg0_out,
+        Reg1_out => Reg1_out,
+        Reg2_out => Reg2_out,
+        Reg3_out => Reg3_out,
+        Reg4_out => Reg4_out,
+        Reg5_out => Reg5_out,
+        Reg6_out => Reg6_out,
+        Reg7_out => Reg7_out);
+        
+clock_process : process
+    begin
+        Clk <= '0';
+        wait for clock_period / 2;
+        
+        Clk <= '1';
+        wait for clock_period / 2;
+end process;
+        
+sim : process
+    begin
+        RegBank_in <= "0011";
+        RegEN      <= "010";
+    wait;
+end process;
+
+end Behavioral;

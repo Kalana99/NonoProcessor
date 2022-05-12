@@ -1,0 +1,54 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/05/2021 05:49:34 PM
+-- Design Name: 
+-- Module Name: Sim_ProgramROM - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_ProgramROM is
+--  Port ( );
+end Sim_ProgramROM;
+
+architecture Behavioral of Sim_ProgramROM is
+
+component Program_ROM is
+    Port ( Mem_Sel      : in STD_LOGIC_VECTOR (2 downto 0);
+           Instruction  : out STD_LOGIC_VECTOR (11 downto 0));
+end component;
+
+signal Mem_Sel : std_logic_vector(2 downto 0);
+signal Instruction : std_logic_vector(11 downto 0);
+
+begin
+
+UUT : Program_ROM port map(
+        Mem_Sel     => Mem_Sel,
+        Instruction => Instruction);
+        
+process
+    begin
+        Mem_Sel <= "001";
+        wait for 100ns;
+        
+        Mem_Sel <= "101";
+    wait;
+end process;
+
+end Behavioral;

@@ -1,0 +1,70 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/06/2021 12:29:37 PM
+-- Design Name: 
+-- Module Name: Sim_PC_Reg - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_PC_Reg is
+--  Port ( );
+end Sim_PC_Reg;
+
+architecture Behavioral of Sim_PC_Reg is
+
+component PC_Reg is
+    Port (    D     : in STD_LOGIC_VECTOR (2 downto 0);
+              R     : in STD_LOGIC;                         --reset push button
+              Clk   : in STD_LOGIC;
+              Q     : out STD_LOGIC_VECTOR (2 downto 0));   --memory select
+end component;
+
+signal D, Q             : std_logic_vector(2 downto 0);
+signal R, Clk           : std_logic;
+
+constant clock_period   : time := 10ns;
+
+begin
+
+UUT : PC_Reg port map(
+        D   => D,
+        R   => R,
+        Clk => Clk,
+        Q   => Q);
+        
+clock_process : process
+    begin
+        Clk <= '0';
+        wait for clock_period / 2;
+        
+        Clk <= '1';
+        wait for clock_period / 2;
+end process;
+
+sim : process
+    begin
+        D <= "010";
+        R <= '0';
+        wait for 100ns;
+        
+        R <= '1';
+    wait;
+end process;
+
+end Behavioral;

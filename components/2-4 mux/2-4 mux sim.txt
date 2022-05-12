@@ -1,0 +1,69 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_2_4_mux is
+--  Port ( );
+end Sim_2_4_mux;
+
+architecture Behavioral of Sim_2_4_mux is
+
+component Mux_2_way_4_bit
+    Port ( immediateVal : in STD_LOGIC_VECTOR (3 downto 0);
+           addSub_result : in STD_LOGIC_VECTOR (3 downto 0);
+           loadSel : in STD_LOGIC;
+           mux_out : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+signal immediateVal, addSub_result, mux_out : STD_LOGIC_VECTOR (3 downto 0);
+signal loadSel : STD_LOGIC;
+
+begin
+
+UUT: Mux_2_way_4_bit port map(
+    immediateVal => immediateVal,
+    addSub_result => addSub_result,
+    loadSel => loadSel,
+    mux_out => mux_out);
+    
+    process
+    begin
+    
+        immediateVal <= "0110";
+        addSub_result <= "1001";
+        
+        wait for 100ns;
+        
+        loadSel <= '0';
+        
+        wait for 100ns;
+        
+        loadSel <= '1';
+        
+        wait for 100ns;
+        
+        addSub_result <= "1111";
+        loadSel <= '0';
+        
+        wait for 100ns;
+        
+        immediateVal <= "1111";
+        loadSel <= '1';
+        
+        wait for 100ns;
+        
+        immediateVal <= "1110";
+        
+        wait for 100ns;
+        
+        addSub_result <= "0111";
+        loadSel <= '0';
+        
+        wait for 100ns;
+        
+        addSub_result <= "1010";
+        
+        wait;
+    
+    end process;
+
+end Behavioral;

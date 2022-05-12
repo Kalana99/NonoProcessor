@@ -1,0 +1,97 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/04/2021 06:57:48 PM
+-- Design Name: 
+-- Module Name: AddSubUnit - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity AddSubUnit is
+    Port ( MuxA_out     : in STD_LOGIC_VECTOR (3 downto 0);     --outputs of the mux -> inputs for the add/sub unit
+           MuxB_out     : in STD_LOGIC_VECTOR (3 downto 0);
+           Add_Sub_sel  : in STD_LOGIC;                         --add/sub unit selector line
+           Neg_in       : in STD_LOGIC;                         --to calculate the negation of a given number
+           Add_Sub_out  : out STD_LOGIC_VECTOR (3 downto 0);    --output of the add/sub unit
+           overflow     : out STD_LOGIC;                        --carry out
+           zero         : out STD_LOGIC);                       --zero flag :- '1' if output is zero
+end AddSubUnit;
+
+architecture Behavioral of AddSubUnit is
+
+component RCA_4
+    Port ( A0       : in STD_LOGIC;
+           A1       : in STD_LOGIC;
+           A2       : in STD_LOGIC;
+           A3       : in STD_LOGIC;
+           B0       : in STD_LOGIC;
+           B1       : in STD_LOGIC;
+           B2       : in STD_LOGIC;
+           B3       : in STD_LOGIC;
+           C_in     : in STD_LOGIC;
+           S0       : out STD_LOGIC;
+           S1       : out STD_LOGIC;
+           S2       : out STD_LOGIC;
+           S3       : out STD_LOGIC;
+           C_out    : out STD_LOGIC);
+end component;
+
+signal in_A0, in_A1, in_A2, in_A3   : STD_LOGIC; 
+--define seperate equations in order to execute both add/sub and neg instruction
+
+signal in_RCA_out       : STD_LOGIC_VECTOR (3 downto 0); 
+--output of the ripple carry adder
+signal in_RCA_carryOut  : STD_LOGIC; 
+--carry out of the ripple carry adder
+
+begin
+    -- calculates either addition or negation, based on the instruction
+    in_A0 <= MuxA_out(0) xor Neg_in;
+    in_A1 <= MuxA_out(1) xor Neg_in;
+    in_A2 <= MuxA_out(2) xor Neg_in;
+    in_A3 <= MuxA_out(3) xor Neg_in;
+        
+    RCA_4_0 : RCA_4
+        port map(
+            A0      => in_A0,
+            A1      => in_A1,
+            A2      => in_A2,
+            A3      => in_A3,
+            B0      => MuxB_out(0),
+            B1      => MuxB_out(1),
+            B2      => MuxB_out(2),
+            B3      => MuxB_out(3),
+            C_in    => Neg_in,
+            S0      => in_RCA_out(0),
+            S1      => in_RCA_out(1),
+            S2      => in_RCA_out(2),
+            S3      => in_RCA_out(3),
+            C_out   => overflow);
+        
+        process(Add_Sub_sel, in_RCA_out)
+            begin
+            
+                if (Add_Sub_sel = '1') then
+                    Add_Sub_out <= in_RCA_out;
+                end if;
+                
+            end process;
+            
+        zero <= not(in_RCA_out(0) or in_RCA_out(1) or in_RCA_out(2) or in_RCA_out(3));
+
+end Behavioral;

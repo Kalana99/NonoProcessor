@@ -1,0 +1,89 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_Add_Sub_unit is
+--  Port ( );
+end Sim_Add_Sub_unit;
+
+architecture Behavioral of Sim_Add_Sub_unit is
+
+component Add_Sub_Unit
+    Port ( MuxA_out : in STD_LOGIC_VECTOR (3 downto 0);
+           MuxB_out : in STD_LOGIC_VECTOR (3 downto 0);
+           Add_Sub_sel : in STD_LOGIC;
+           Neg_in : in STD_LOGIC;
+           Add_Sub_out : out STD_LOGIC_VECTOR (3 downto 0);
+           overflow : out STD_LOGIC;
+           zero : out STD_LOGIC);
+end component;
+
+signal MuxA_out, MuxB_out, Add_Sub_out : STD_LOGIC_VECTOR (3 downto 0);
+signal Add_Sub_sel, Neg_in, overflow, zero : STD_LOGIC;
+
+begin
+
+UUT: Add_Sub_Unit port map(
+    MuxA_out => MuxA_out,
+    MuxB_out => MuxB_out,
+    Add_Sub_sel => Add_Sub_sel,
+    Neg_in => Neg_in,
+    Add_Sub_out => Add_Sub_out,
+    overflow => overflow,
+    zero => zero);
+    
+    sim : process
+    begin
+        
+        Add_Sub_sel <= '1'; --enable add/sub unit
+        
+        --test addition
+        Neg_in <= '0';
+        
+        --check zero flag
+        MuxA_out <= "0000";
+        MuxB_out <= "0000";
+        
+        wait for 100ns;
+        
+        --check nomal addition
+        
+        MuxA_out <= "0001";
+        MuxB_out <= "0001";
+        
+        wait for 100ns;
+        
+        --check addition with a carry
+        
+        MuxA_out <= "1100";
+        MuxB_out <= "1000";
+        
+        wait for 100ns;
+        
+        --test for negation
+        Neg_in <= '1';
+        
+        --negation of a positive number
+        MuxA_out <= "0111"; -- +7
+        MuxB_out <= "0000";
+        
+        wait for 100ns;
+        
+        MuxA_out <= "0101"; -- +5
+        MuxB_out <= "0000";
+        
+        wait for 100ns;
+        
+        --negation of a negative number
+        MuxA_out <= "1111"; -- -1
+        MuxB_out <= "0000";
+        
+        wait for 100ns;
+        
+        MuxA_out <= "1001"; -- -7
+        MuxB_out <= "0000";
+        
+        wait;
+    
+    end process;
+
+end Behavioral;

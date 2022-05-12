@@ -1,0 +1,89 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/04/2021 11:01:11 PM
+-- Design Name: 
+-- Module Name: Sim_ProgramCounter - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_ProgramCounter is
+--  Port ( );
+end Sim_ProgramCounter;
+
+architecture Behavioral of Sim_ProgramCounter is
+
+component ProgramCounter is
+    Port ( Clk      : in STD_LOGIC;
+           Reset    : in STD_LOGIC;
+           JumpFlag : in STD_LOGIC;
+           JumpAdd  : in STD_LOGIC_VECTOR (2 downto 0);
+           MemSel   : inout STD_LOGIC_VECTOR (2 downto 0));
+end component;
+
+signal Clk, Reset, JumpFlag : std_logic;
+signal JumpAdd, MemSel      : std_logic_vector(2 downto 0);
+
+constant clock_period       : time := 10ns;
+
+begin
+
+UUT : ProgramCounter port map(
+        Clk         => Clk,
+        Reset       => Reset,
+        JumpFlag    => JumpFlag,
+        JumpAdd     => JumpAdd,
+        MemSel      => MemSel);
+        
+clock_process : process
+    begin
+        Clk <= '0';
+        wait for clock_period / 2;
+        
+        Clk <= '1';
+        wait for clock_period / 2;
+        
+end process;
+        
+sim : process
+    begin
+        JumpFlag <= '0';
+        wait for 50ns;
+        
+        JumpFlag <= '1';
+        JumpAdd  <= "011";
+        wait for clock_period;
+        
+        JumpFlag <= '0';
+        Reset <= '1';
+        wait for 50ns;
+        Reset <= '0';
+        
+        JumpFlag <= '1';
+        JumpAdd  <= "101";
+        wait for clock_period;
+        
+        JumpFlag <= '0';
+        wait for 100ns;
+        
+        JumpFlag <= '1';
+        JumpAdd  <= "111";
+    wait;
+end process;
+
+end Behavioral;

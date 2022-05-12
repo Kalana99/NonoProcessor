@@ -1,0 +1,72 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/05/2021 05:29:11 PM
+-- Design Name: 
+-- Module Name: Sim_InsDecoder - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_InsDecoder is
+--  Port ( );
+end Sim_InsDecoder;
+
+architecture Behavioral of Sim_InsDecoder is
+
+component Ins_Decoder is
+    Port ( Instruction      : in STD_LOGIC_VECTOR (11 downto 0);
+           JumpCheck        : in STD_LOGIC_VECTOR (3 downto 0);
+           Reg_En           : out STD_LOGIC_VECTOR (2 downto 0);
+           Load_Sel         : out STD_LOGIC;
+           Imm_Val          : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg_Sel_A        : out STD_LOGIC_VECTOR (2 downto 0);
+           Reg_Sel_B        : out STD_LOGIC_VECTOR (2 downto 0);
+           AddSub_Sel       : out STD_LOGIC;
+           Jump_Flag        : out STD_LOGIC;
+           Jump_Add         : out STD_LOGIC_VECTOR (2 downto 0);
+           Neg_Sel          : out STD_LOGIC);
+end component;
+
+signal Instruction                              : std_logic_vector(11 downto 0);
+signal JumpCheck, Imm_Val                       : std_logic_vector(3 downto 0);
+signal Reg_En, Reg_Sel_A, Reg_Sel_B, Jump_Add   : std_logic_vector(2 downto 0);
+signal Load_Sel, AddSub_Sel, Jump_Flag, Neg_Sel : std_logic;
+
+begin
+
+UUT : Ins_Decoder port map(
+        Instruction => Instruction,
+        JumpCheck   => JumpCheck,
+        Reg_En      => Reg_En,
+        Load_Sel    => Load_Sel,
+        Imm_Val     => Imm_Val,
+        Reg_Sel_A   => Reg_Sel_A,
+        Reg_Sel_B   => Reg_Sel_B,
+        AddSub_Sel  => AddSub_Sel,
+        Jump_Flag   => Jump_Flag,
+        Jump_Add    => Jump_Add,
+        Neg_Sel     => Neg_Sel);
+        
+process
+    begin
+        Instruction <= "101110000011";
+        JumpCheck   <= "0110";
+    wait;
+end process;
+
+end Behavioral;

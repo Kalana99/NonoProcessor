@@ -1,0 +1,75 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Add_Sub_Unit is
+    Port ( MuxA_out : in STD_LOGIC_VECTOR (3 downto 0); --outputs of the mux -> inputs for the add/sub unit
+           MuxB_out : in STD_LOGIC_VECTOR (3 downto 0);
+           Add_Sub_sel : in STD_LOGIC; --add/sub unit selector line
+           Neg_in : in STD_LOGIC; --for calculate the negation of a given number
+           Add_Sub_out : out STD_LOGIC_VECTOR (3 downto 0); --output of the add/sub unit
+           overflow : out STD_LOGIC; --carry out
+           zero : out STD_LOGIC); --zero flag :- '1' if output is zero
+end Add_Sub_Unit;
+
+architecture Behavioral of Add_Sub_Unit is
+
+component RCA_4 --ripple carry adder
+    Port ( A0 : in STD_LOGIC;
+           A1 : in STD_LOGIC;
+           A2 : in STD_LOGIC;
+           A3 : in STD_LOGIC;
+           B0 : in STD_LOGIC;
+           B1 : in STD_LOGIC;
+           B2 : in STD_LOGIC;
+           B3 : in STD_LOGIC;
+           C_in : in STD_LOGIC;
+           S0 : out STD_LOGIC;
+           S1 : out STD_LOGIC;
+           S2 : out STD_LOGIC;
+           S3 : out STD_LOGIC;
+           C_out : out STD_LOGIC);
+end component;
+
+signal internal_A0, internal_A1, internal_A2, internal_A3, internal_B0 : STD_LOGIC; --define seperate equations in order to execute both add/sub and neg instruction
+
+signal internal_RCA_out : STD_LOGIC_VECTOR (3 downto 0); --output of the ripple carry adder
+signal internal_RCA_carryOut : STD_LOGIC; --carry out of the ripple carry adder
+
+begin
+    
+    -- calculates either addition or negation, based on the instruction
+    internal_A0 <= MuxA_out(0) xor Neg_in;
+    internal_A1 <= MuxA_out(1) xor Neg_in;
+    internal_A2 <= MuxA_out(2) xor Neg_in;
+    internal_A3 <= MuxA_out(3) xor Neg_in;
+    internal_B0 <= MuxB_out(0) or Neg_in;
+        
+    RCA_4_0 : RCA_4
+        port map(
+        A0 => internal_A0,
+        A1 => internal_A1,
+        A2 => internal_A2,
+        A3 => internal_A3,
+        B0 => internal_B0,
+        B1 => MuxB_out(1),
+        B2 => MuxB_out(2),
+        B3 => MuxB_out(3),
+        C_in => '0',
+        S0 => internal_RCA_out(0),
+        S1 => internal_RCA_out(1),
+        S2 => internal_RCA_out(2),
+        S3 => internal_RCA_out(3),
+        C_out => internal_RCA_carryOut);
+        
+        process(Add_Sub_sel, internal_RCA_out, internal_RCA_carryOut)
+        begin
+        
+            if (Add_Sub_sel = '1') then --connect the results of the ripple carry adder to the output only if add/sub select line is '1'
+                Add_Sub_out <= internal_RCA_out;
+                overflow <= internal_RCA_carryOut;
+                zero <= not(internal_RCA_out(0) or internal_RCA_out(1) or internal_RCA_out(2) or internal_RCA_out(3) or internal_RCA_carryOut);
+            end if;
+            
+        end process;
+
+end Behavioral;

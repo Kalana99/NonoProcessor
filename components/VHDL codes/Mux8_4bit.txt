@@ -1,0 +1,59 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/04/2021 06:54:36 PM
+-- Design Name: 
+-- Module Name: Mux8_4bit - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Mux8_4bit is
+    Port ( A0       : in STD_LOGIC_VECTOR (3 downto 0);
+           A1       : in STD_LOGIC_VECTOR (3 downto 0);
+           A2       : in STD_LOGIC_VECTOR (3 downto 0);
+           A3       : in STD_LOGIC_VECTOR (3 downto 0);
+           A4       : in STD_LOGIC_VECTOR (3 downto 0);
+           A5       : in STD_LOGIC_VECTOR (3 downto 0);
+           A6       : in STD_LOGIC_VECTOR (3 downto 0);
+           A7       : in STD_LOGIC_VECTOR (3 downto 0);
+           RegSel   : in STD_LOGIC_VECTOR (2 downto 0);
+           Q        : out STD_LOGIC_VECTOR (3 downto 0));
+end Mux8_4bit;
+
+architecture Behavioral of Mux8_4bit is
+
+begin
+
+    process(A0, A1, A2, A3, A4, A5, A6, A7, RegSel)
+        begin
+            case RegSel is
+            
+                when "000" => Q <= A0;
+                when "001" => Q <= A1;
+                when "010" => Q <= A2;
+                when "011" => Q <= A3;
+                when "100" => Q <= A4;
+                when "101" => Q <= A5;
+                when "110" => Q <= A6;
+                when "111" => Q <= A7;
+                when others => Q <= "0000";
+            
+            end case;
+        end process;
+
+end Behavioral;

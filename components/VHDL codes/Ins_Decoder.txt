@@ -1,0 +1,82 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/04/2021 09:17:53 PM
+-- Design Name: 
+-- Module Name: Ins_Decoder - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Ins_Decoder is
+    Port ( Instruction      : in STD_LOGIC_VECTOR (11 downto 0);
+           JumpCheck        : in STD_LOGIC_VECTOR (3 downto 0);
+           Reg_En           : out STD_LOGIC_VECTOR (2 downto 0);
+           Load_Sel         : out STD_LOGIC;
+           Imm_Val          : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg_Sel_A        : out STD_LOGIC_VECTOR (2 downto 0);
+           Reg_Sel_B        : out STD_LOGIC_VECTOR (2 downto 0);
+           AddSub_Sel       : out STD_LOGIC;
+           Jump_Flag        : out STD_LOGIC;
+           Jump_Add         : out STD_LOGIC_VECTOR (2 downto 0);
+           Neg_Sel          : out STD_LOGIC);
+end Ins_Decoder;
+
+architecture Behavioral of Ins_Decoder is
+
+component Decoder_2_to_4 is
+    Port ( I : in STD_LOGIC_VECTOR (1 downto 0);
+           EN : in STD_LOGIC;
+           Y : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+signal Add, Neg, Mov, Jmp, En_Sel : std_logic;
+--En_Sel is for enable registers only if the instruction is not Jmp
+
+begin
+
+    Decoder_2_to_4_0: Decoder_2_to_4
+        port map(
+                I(0)    => Instruction(10),
+                I(1)    => Instruction(11),
+                EN      => '1',
+                Y(0)    => Add,
+                Y(1)    => Neg,
+                Y(2)    => Mov,
+                Y(3)    => Jmp);
+                
+    Load_Sel    <= Mov;
+    AddSub_Sel  <= Add or Neg;
+    Neg_Sel     <= Neg;
+    
+    En_Sel      <= Add or Mov or Neg;
+    
+    Imm_Val     <= Instruction(3 downto 0);
+    
+    Reg_En(0)   <= En_Sel and Instruction(7);
+    Reg_En(1)   <= En_Sel and Instruction(8);
+    Reg_En(2)   <= En_Sel and Instruction(9);
+    
+    Reg_Sel_A   <= Instruction(9 downto 7);
+    Reg_Sel_B   <= Instruction(6 downto 4);
+    
+    --check the register R = 0 before jump
+    Jump_Flag   <= Jmp and (not (JumpCheck(0) or JumpCheck(1) or JumpCheck(2) or JumpCheck(3)));
+    --address to jump is in the first three digits of the instruction
+    Jump_Add    <= Instruction(2 downto 0); 
+
+end Behavioral;

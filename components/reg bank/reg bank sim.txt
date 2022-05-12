@@ -1,0 +1,107 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Sim_RegBank is
+--  Port ( );
+end Sim_RegBank;
+
+architecture Behavioral of Sim_RegBank is
+
+component RegisterBank
+    Port ( RegBank_in : in STD_LOGIC_VECTOR (3 downto 0);
+           RegEN : in STD_LOGIC_VECTOR (2 downto 0);
+           Clk : in STD_LOGIC;
+           Reg0_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg1_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg2_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg3_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg4_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg5_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg6_out : out STD_LOGIC_VECTOR (3 downto 0);
+           Reg7_out : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+signal RegBank_in, Reg0_out, Reg1_out, Reg2_out, Reg3_out, Reg4_out, Reg5_out, Reg6_out, Reg7_out : STD_LOGIC_VECTOR (3 downto 0);
+signal RegEN : STD_LOGIC_VECTOR (2 downto 0);
+signal Clk : STD_LOGIC;
+constant clock_period : time := 10ns; --100MHz
+
+begin
+
+UUT: RegisterBank 
+port map ( RegBank_in => RegBank_in,
+           RegEN => RegEN,
+           Clk => Clk,
+           Reg0_out => Reg0_out,
+           Reg1_out => Reg1_out, 
+           Reg2_out => Reg2_out,
+           Reg3_out => Reg3_out,
+           Reg4_out => Reg4_out,
+           Reg5_out => Reg5_out,
+           Reg6_out => Reg6_out,
+           Reg7_out => Reg7_out);
+
+    clock_process : process
+    begin
+    
+        Clk <= '0';
+        
+        wait for clock_period/2;
+        
+        Clk <= '1';
+                
+        wait for clock_period/2;
+    
+    end process;
+    
+    sim : process --check for random numbers to be stored in each register
+    begin
+        
+        -- check whether creating Reg_0 as readOnly is successfull or not
+        RegBank_in <= "0101";
+        RegEN <= "000";
+        
+        wait for 100ns;
+        
+        RegBank_in <= "1111";
+        RegEN <= "001";
+        
+        wait for 100ns;
+        
+        RegBank_in <= "1001";
+        RegEN <= "010";
+        
+        wait for 100ns; --update the value in Register 02
+        
+        RegBank_in <= "0110";
+        
+        wait for 100ns;
+        
+        RegBank_in <= "1100";
+        RegEN <= "100";
+        
+        wait for 100ns;
+        
+        RegBank_in <= "0000";
+        RegEN <= "011";
+        
+        wait for 100ns;
+        
+        RegBank_in <= "1101";
+        RegEN <= "101";
+        
+        wait for 100ns;
+        
+        RegBank_in <= "0100";
+        RegEN <= "110";
+        
+        wait for 100ns;
+        
+        RegBank_in <= "0111";
+        RegEN <= "111";
+        
+        wait;
+    
+    end process;
+
+end Behavioral;

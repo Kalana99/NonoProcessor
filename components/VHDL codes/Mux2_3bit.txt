@@ -1,0 +1,47 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 04/04/2021 10:13:56 PM
+-- Design Name: 
+-- Module Name: Mux2_3bit - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Mux2_3bit is
+    Port ( AdderOutput  : in STD_LOGIC_VECTOR (2 downto 0);
+           AddressJump  : in STD_LOGIC_VECTOR (2 downto 0);
+           jumpFlag     : in STD_LOGIC;
+           mux_out      : out STD_LOGIC_VECTOR (2 downto 0));
+end Mux2_3bit;
+
+architecture Behavioral of Mux2_3bit is
+
+begin
+
+    process(AdderOutput, AddressJump, jumpFlag)
+        begin
+            case jumpFlag is
+            
+                when '1'    => mux_out <= AddressJump;
+                when '0'    => mux_out <= AdderOutput;
+                when others => mux_out <= "000";
+            
+            end case;
+        end process;
+
+end Behavioral;
